@@ -1,0 +1,22 @@
+#!/usr/bin/php -q
+<?php
+$in_file = $_SERVER["argv"][1];
+$out_file = $_SERVER["argv"][2];
+
+$key = 'API key Yandex';
+$speaker='zahar';
+$emotion='good';
+$lang='ru-RU';
+$format='wav';
+
+$text = file_exists($in_file) ? file_get_contents($in_file) : null;
+$background = '/usr/share/yandexsk/backgrounds/background.mp3';// path to background file
+$voice = sys_get_temp_dir().'/'.md5($text).'.'.$format;
+
+$qs = http_build_query(array("format" => $format, "lang" => $lang, "speaker" => $speaker, "key" => $key, "emotion" => $emotion, "text" => $text));
+
+exec('curl "https://tts.voicetech.yandex.net/generate?'.$qs.'" > '.$voice);
+exec('ffmpeg -y -i '.$voice.' -i '.$background.' -filter_complex "[0]volume=6dB[a0];[1]volume=0.5[a1];[a0][a1]amix=inputs=2:duration=first" -ar 8000 -ac 1 -ab 64 '.$out_file);
+
+unlink($voice);
+?>
