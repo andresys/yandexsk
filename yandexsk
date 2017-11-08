@@ -3,14 +3,14 @@
 $in_file = $_SERVER["argv"][1];
 $out_file = $_SERVER["argv"][2];
 
-$key = 'API key Yandex';
+$key = 'Change to your API key Yandex';
 $speaker='zahar';
 $emotion='good';
 $lang='ru-RU';
 $format='wav';
 
 $text = file_exists($in_file) ? file_get_contents($in_file) : null;
-$background = '/usr/share/yandexsk/backgrounds/background.mp3';// path to background file
+$background = '/usr/share/yandexsk/backgrounds/background.mp3';// path to background music file
 $voice = sys_get_temp_dir().'/'.md5($text).'.'.$format;
 
 $qs = http_build_query(array("format" => $format, "lang" => $lang, "speaker" => $speaker, "key" => $key, "emotion" => $emotion, "text" => $text));
